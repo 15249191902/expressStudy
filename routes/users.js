@@ -19,6 +19,7 @@ router.get('/getUser', function(req, res, next) {
   })
 });
 router.get('/getUser1', function(req, res, next) {
+  // 
   // res.send('respond with a resource');
   let name = ["luffy"]
   dataConnect(function (conn) {
