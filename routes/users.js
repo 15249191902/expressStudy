@@ -3,7 +3,7 @@ var router = express.Router();
 var pool = require("../database/connect");
 var dataConnect = require("../database/index")
 /* GET users listing. */
-router.get('/getUser', function(req, res, next) {
+router.post('/getUser', function(req, res, next) {
   // res.send('respond with a resource');
   let name = "luffy"
   dataConnect(function (conn) {
@@ -18,7 +18,7 @@ router.get('/getUser', function(req, res, next) {
       })
   })
 });
-router.get('/getUser1', function(req, res, next) {
+router.post('/getUser1', function(req, res, next) {
   // 
   // res.send('respond with a resource');
   let name = ["luffy"]
