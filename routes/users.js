@@ -6,20 +6,25 @@ var dataConnect = require("../database/index")
 router.post('/getUser', function(req, res, next) {
   // res.send('respond with a resource');
   let name = "luffy"
-  dataConnect(function (conn) {
+  dataConnect().then(conn => {
+    // console.log(conn);
+    return new Promise((resolve ,reject) => {
       conn.query(`select * from user where name = "${name}"`, function (error, results, fields) {
         try {
-          res.send(results);
+          resolve(results);
           conn.release();
           if (error) throw error;
         } catch (error) {
-          console.log(error)
+          reject(error);
         }
       })
+    })
+  }).then(msg => {
+    console.log(msg)
+    res.send(msg);
   })
 });
 router.post('/getUser1', function(req, res, next) {
-  // 
   // res.send('respond with a resource');
   let name = ["luffy"]
   dataConnect(function (conn) {
