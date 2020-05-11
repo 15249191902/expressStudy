@@ -1,32 +1,23 @@
 var express = require('express');
 var router = express.Router();
-var pool = require("../database/connect");
-var dataConnect = require("../database/index")
+var {query, dataConnect} = require("../database/index")
 /* GET users listing. */
-router.post('/getUserByPage', function(req, res, next) {
-  const {pageNo, pageSize} = req.body
-  let offset = pageNo - 1 < 0 ? 0 : pageNo -1
-  dataConnect().then(conn => {
-    // console.log(conn);
-    return new Promise((resolve ,reject) => {
-      conn.query(`select * from user limit ${offset},${pageSize}`, function (error, results, fields) {
-        try {
-          resolve(results);
-          conn.release();
-          if (error) throw error;
-        } catch (error) {
-          reject(error);
-        }
-      })
-    })
-  }).then(msg => {
-    console.log(msg)
-    res.send(msg);
-  })
-});
+router.post('/getUserByPage',getUserByPage);
+async function getUserByPage (req, res, next) {
+  let data = {};
+  try {
+    let {pageNo, pageSize} = req.body
+    let offset = pageNo - 1 < 0 ? 0 : pageNo -1
+    data = await query(`select * from user limit ${offset},${pageSize}`);
+  } catch (error) {
+    data = {msg: "消息失败"}
+  }
+  next();
+  return res.send(data);
+}
 router.post('/getUser1', function(req, res, next) {
   // res.send('respond with a resource');
-  let name = ['sanji']
+  let name = ['luffy']
   dataConnect().then(conn => {
     // console.log(conn);
     return new Promise((resolve ,reject) => {
@@ -41,7 +32,7 @@ router.post('/getUser1', function(req, res, next) {
       })
     })
   }).then(msg => {
-    console.log(msg)
+    // console.log(msg)
     res.send(msg);
   })
 });
