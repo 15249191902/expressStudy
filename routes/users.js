@@ -4,16 +4,19 @@ var {query, dataConnect} = require("../database/index")
 /* GET users listing. */
 router.post('/getUserByPage',getUserByPage);
 async function getUserByPage (req, res, next) {
+  // console.log(next)
   let data = {};
+  let product = {};
   try {
     let {pageNo, pageSize} = req.body
     let offset = pageNo - 1 < 0 ? 0 : pageNo -1
     data = await query(`select * from user limit ${offset},${pageSize}`);
+    product = await query(`select * from product limit ${offset},${pageSize}`)
   } catch (error) {
     data = {msg: "消息失败"}
   }
-  return res.send(data);
-  next();
+  return res.send({data,product});
+  // next();
 }
 router.post("/deleteUserById", async function (req, res, next) {
   let data = {};
@@ -29,7 +32,7 @@ router.post("/deleteUserById", async function (req, res, next) {
     data = {msg: error, code: 0}
   }
   return res.send(data);
-  next();
+  // next();
 })
 // 封装前  旧版查询写法
 router.post('/getUser1', function(req, res, next) {
