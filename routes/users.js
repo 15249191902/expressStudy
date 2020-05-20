@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var {query, dataConnect} = require("../database/index")
+const {Succ, Fail} = require("../util/returnData.js")
 /* GET users listing. */
 router.post('/getUserByPage',getUserByPage);
 async function getUserByPage (req, res, next) {
@@ -10,12 +11,15 @@ async function getUserByPage (req, res, next) {
   try {
     let {pageNo, pageSize} = req.body
     let offset = pageNo - 1 < 0 ? 0 : pageNo -1
-    data = await query(`select * from user limit ${offset},${pageSize}`);
+    user = await query(`select * from user limit ${offset},${pageSize}`);
     product = await query(`select * from product limit ${offset},${pageSize}`)
+    data = new Succ()
+    data.data = {user, product}
   } catch (error) {
-    data = {msg: "消息失败"}
+    console.log(error)
+    data = new Fail()
   }
-  return res.send({data,product});
+  return res.send(data);
   // next();
 }
 router.post("/deleteUserById", async function (req, res, next) {
@@ -23,13 +27,15 @@ router.post("/deleteUserById", async function (req, res, next) {
   try {
     let {id} = req.body
     data = await query(`delete from user where id = ?`,id);
+    console.log(data)
     if (data.affectedRows > 0) {
-      data = {msg: '删除成功！', code: 1}
+      data = new Succ()
     } else {
-      data = {msg: '删除失败！', code: 0}
+      data = new Fail();
     }
   }catch (error) {
-    data = {msg: error, code: 0}
+    console.log(error)
+    data = new Fail();
   }
   return res.send(data);
   // next();
