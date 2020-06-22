@@ -7,14 +7,12 @@ router.post('/getUserByPage',getUserByPage);
 async function getUserByPage (req, res, next) {
   // console.log(next)
   let data = {};
-  let product = {};
   try {
     let {pageNo, pageSize} = req.body
     let offset = pageNo - 1 < 0 ? 0 : pageNo -1
-    user = await query(`select * from user limit ${offset},${pageSize}`);
-    product = await query(`select * from product limit ${offset},${pageSize}`)
-    data = new Succ()
-    data.data = {user, product}
+    const user = await query(`select * from user limit ${offset},${pageSize}`);
+    const product = await query(`select * from product limit ${offset},${pageSize}`)
+    data = new Succ({user, product})
   } catch (error) {
     console.log(error)
     data = new Fail()

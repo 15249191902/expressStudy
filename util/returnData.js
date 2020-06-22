@@ -1,7 +1,8 @@
 class Succ {
-  constructor () {
+  constructor (data) {
     this.status = 0;
     this.message = "请求成功！";
+    this.data = data;
   }
 }
 class Fail {
