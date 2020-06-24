@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var {query, dataConnect} = require("../database/index")
 const {Succ, Fail} = require("../util/returnData.js")
+const {getUUID, getCurrTime} = require("../util/util.js")
 /* GET users listing. */
 router.post('/getUserByPage',getUserByPage);
 async function getUserByPage (req, res, next) {
@@ -25,7 +26,6 @@ router.post("/deleteUserById", async function (req, res, next) {
   try {
     let {id} = req.body
     data = await query(`delete from user where id = ?`,id);
-    console.log(data)
     if (data.affectedRows > 0) {
       data = new Succ()
     } else {
@@ -37,7 +37,7 @@ router.post("/deleteUserById", async function (req, res, next) {
   }
   return res.send(data);
   // next();
-})
+});
 // 封装前  旧版查询写法
 router.post('/getUser1', function(req, res, next) {
   // res.send('respond with a resource');
